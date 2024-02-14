@@ -3,7 +3,7 @@
     Created on : 8 feb. 2024, 9:44:01
     Author     : manana
 --%>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -51,6 +51,7 @@
                         <th>acciones</th>
                         </thead>
                         <tbody>
+                           
                         <c:forEach items="${medicos}" var="lista">
                             <tr>
                                 <td>${lista.getIdMedicos()}</td>
@@ -62,24 +63,18 @@
                                     <a class="btn btn-outline-warning"  href="./Medico?accion=editar&id=${lista.getIdMedicos()}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> &nbsp;
                                     <a class="btn btn-outline-danger" href="./Medico?accion=eliminar&id=${lista.getIdMedicos()}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                 </td>
-
-
-
                             </tr>
-
-
                         </c:forEach>
-
-
                         </tbody>
-
                     </table>
-
-
+                    
+                </section>
+                <section class="col-md-2">
+                    <h1 items="${totalMedicos}" var="total">Tarifa Total ${total} </h1>
+                    <h1>Total Médicos</h1>
                 </section>
             </div>
-
+             
         </div>
-
     </body>
 </html>

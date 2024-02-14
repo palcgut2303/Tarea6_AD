@@ -14,8 +14,29 @@ and open the template in the editor.
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
-   
-        <h1 class="text-3xl font-bold underline">Medicos</h1>
-        <h1 class="text-3xl"><a href="./Medico">Crear Medicos </a></h1>
+        
+        <div class="flex justify-center items-center bg-blue-500 py-4">
+            <img src="images/imagenTuerca.png" class="w-12 h-12" alt="Logo de la empresa"/>
+            <h1 class="text-white text-center">Gestion de medicos</h1>
+        </div>
+        <div class="bg-blue-500 py-4">
+            
+            <ul class="flex justify-center gap-10">
+                <li>
+                    <img src="images/logo.png" class="w-12 h-12 mr-4" alt="Logo de la empresa"/>
+                </li>
+                <li>
+                    <a href="./Medico">Medicos</a>
+                </li>
+                <li>
+                    <span class="text-white">Cerrar Sesión</span>
+                </li>
+                <li>
+                     <span class="text-white">Bienvenidos al portal de Pablo</span>
+                </li>
+            </ul>
+           
+        </div>
+        
     </body>
 </html>

@@ -99,17 +99,19 @@ public class ConectorBD {
         Medicos a = null;
 
         try {
+            
             Statement orden = conn.createStatement();
             ResultSet query = orden.executeQuery("select * from medico where id_medico = '" + id + "'");
 
             if (query.next()) {
                 a = new Medicos();
-
-                a.setIdMedicos(query.getInt("id_medicos"));
+                
+                a.setIdMedicos(query.getInt("id_medico"));
                 a.setNombre(query.getString("nombre"));
                 a.setSala(query.getFloat("sala"));
                 a.setEspecialidad(query.getString("especialidad"));
                 a.setTarifa(query.getInt("tarifa"));
+                
             }
         } catch (SQLException ex) {
             Logger.getLogger(ConectorBD.class.getName()).log(Level.SEVERE, null, ex);
@@ -161,12 +163,12 @@ public class ConectorBD {
 
             Statement orden = conn.createStatement();
             ResultSet query = orden.executeQuery("select * from medico");
-             System.out.println("Visualizando medicos");
+           
             while (query.next()) {
                 Medicos a = new Medicos(query.getInt("id_medico"),query.getString("nombre"), query.getFloat("sala"), query.getInt("tarifa"), query.getString("especialidad"));
 
                 lista.add(a);
-                System.out.println("Medico introducido: " + a.getNombre());
+               
             }
         } catch (SQLException ex) {
             Logger.getLogger(ConectorBD.class.getName()).log(Level.SEVERE, null, ex);

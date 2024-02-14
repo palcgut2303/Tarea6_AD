@@ -37,6 +37,7 @@ public class Medico extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -64,9 +65,9 @@ public class Medico extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+      
         String accion = request.getParameter("accion");
-
+        
         if (accion != null) {
             switch (accion) {
                 case "editar":
@@ -94,11 +95,12 @@ public class Medico extends HttpServlet {
         if (bd.conectar()) {
             System.out.println("Conectado");
             List<Medicos> medicos = bd.listarMedico();
-            System.out.println("medico" + medicos);
+            System.out.println("medico después de bd" + medicos);
             request.setCharacterEncoding("UTF-8");
             response.setCharacterEncoding("UTF-8");
             request.setAttribute("medicos", medicos);
-
+            request.setAttribute("totalMedicos", medicos.size());
+            
             request.getRequestDispatcher("./medicos.jsp").forward(request, response);
             return;
         }
@@ -106,15 +108,15 @@ public class Medico extends HttpServlet {
 
     protected void editarMedicos(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
         String id = request.getParameter("id");
         Medicos a = new Medicos();
         if (bd.conectar()) {
             a = bd.buscarMedico(id);
         }
-
+        
         request.setAttribute("amod", a);
-        String jspEditar = "./Medico";
+        String jspEditar = "./editarmedicos.jsp";
         request.getRequestDispatcher(jspEditar).forward(request, response);
         return;
 

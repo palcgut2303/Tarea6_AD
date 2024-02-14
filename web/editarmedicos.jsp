@@ -23,7 +23,7 @@
 
             <div class="row">
                 <section class="col-md-3">
-                    <form action="./medicos.jsp?accion=modificar&id=${amod.getIdMedicos()}" method="POST" accept-charset="UTF-8">
+                    <form action="./Medico?accion=modificar&id=${amod.getIdMedicos()}" method="POST" accept-charset="UTF-8">
 
                         <div><input type="hidden" name="id" value="${amod.getIdMedicos()}"></div>
                         <div class="form-group"><label for="nombre">Nombre:</label><input class="form-control" type="text" name="nombre" value="${amod.getNombre()}"> </div>
