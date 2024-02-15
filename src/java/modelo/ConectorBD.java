@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -99,9 +100,10 @@ public class ConectorBD {
         boolean b = false;
         String query;
 
+        String contrasenaEncriptada = DigestUtils.sha256Hex(contraseña).substring(0, 40);
         
-        query = "INSERT INTO `usuario` ( `nombre`,`username`,`contraseña`) VALUES "
-                + "( '" + nombre + "', '" + username + "', '"+contraseña+"')";
+        query = "INSERT INTO `usuario` ( `nombre`,`usuario`,`clave`) VALUES "
+                + "( '" + nombre + "', '" + username + "', '"+contrasenaEncriptada+"')";
 
         try {
             System.out.println("Conexion: " + conn.getCatalog());
@@ -131,9 +133,13 @@ public class ConectorBD {
                 
                
             }
+            
+            String contrasenaEncriptada = DigestUtils.sha256Hex(contrasena).substring(0, 40);;
+           
+            
             // Verifica si hay algún usuario con la misma contraseña
             existeUsuarioConMismaContraseña = lista.stream()
-                .anyMatch(usuario -> usuario.getConstraseña().equals(contrasena));
+                .anyMatch(usuario -> usuario.getConstraseña().equals(contrasenaEncriptada));
             
         } catch (SQLException ex) {
             Logger.getLogger(ConectorBD.class.getName()).log(Level.SEVERE, null, ex);

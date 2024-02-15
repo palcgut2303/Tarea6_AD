@@ -26,7 +26,7 @@ and open the template in the editor.
                     <img src="images/logo.png" class="w-12 h-12 mr-4" alt="Logo de la empresa"/>
                 </li>
                 <li>
-                    <a href="./Medico">Medicos</a>
+                    <a href="./Medico" class="inline-block text-white hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">Medicos</a>
                 </li>
                 <li>
                     <span class="text-white">Cerrar Sesión</span>

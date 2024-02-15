@@ -63,15 +63,15 @@ public class Usuario extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
-        
+        System.out.println("Accion enviada" +accion);
         if (accion != null) {
             switch (accion) {
                 case "login":
                     this.login(request, response);
                     break;
 
-                case "eliminar":
-                   // this.eliminarMedicos(request, response);
+                case "register":
+                    this.irPaginaRegister(request, response);
                     break;
 
                 default:
@@ -111,15 +111,17 @@ public class Usuario extends HttpServlet {
         if(bd.conectar()){
             System.out.println("Conectado");
             String email = request.getParameter("username");
-            String contrasena = request.getParameter("constrasena");
+            String contrasena = request.getParameter("contrasena");
             System.out.println(email + " " + contrasena);
             if(bd.comprobarLogin(email,contrasena)){
                 System.out.println("Loggeando Correctamente");
                 request.getRequestDispatcher("./menuPrincipal.jsp").forward(request, response);
+                return;
             }else{
                 System.out.println("Loggeando Incorrectamente");
-                
-                
+                request.setAttribute("mensaje", "Credenciales incorrectas. Por favor, regístrese si es un nuevo usuario.");
+                request.getRequestDispatcher("./index.jsp").forward(request, response);
+                return;
                 
             }
         }
@@ -136,8 +138,55 @@ public class Usuario extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+       String accion = request.getParameter("accion");
+        System.out.println("Accion enviada" +accion);
+        if (accion != null) {
+            switch (accion) {
+                case "login":
+                    this.login(request, response);
+                    break;
+
+                case "register":
+                    this.irPaginaRegister(request, response);
+                    break;
+
+                case "insert":
+                    this.register(request, response);
+                    break;    
+                    
+                default:
+                    System.out.println("Cargando pagina");
+                    this.cargarPagina(request, response);
+            }
+
+        } else {
+            this.cargarPagina(request, response);
+        }
     }
+    
+     private void irPaginaRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("./register.jsp").forward(request, response);
+        return;
+    }
+     
+     private void register(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         
+         bd = new ConectorBD();
+        if(bd.conectar()){
+             String nombre = request.getParameter("nombre");
+             String email = request.getParameter("username");
+             String contrasena = request.getParameter("contrasena");
+            if(bd.altaUsuario(nombre, email, contrasena)){
+                request.getRequestDispatcher("./index.jsp").forward(request, response);
+                return;
+            }else{
+                request.setAttribute("mensaje", "No se ha podido conectar con la base de datos.");
+                request.getRequestDispatcher("./register.jsp").forward(request, response);
+                return;
+            }
+        }
+        
+     }
 
     /**
      * Returns a short description of the servlet.
@@ -148,5 +197,7 @@ public class Usuario extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+   
 
 }
