@@ -7,7 +7,6 @@ package controlador;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,10 +20,8 @@ import modelo.Medicos;
  *
  * @author manana
  */
-@WebServlet(name = "Medico", urlPatterns = {"/Medico"})
-public class Medico extends HttpServlet {
-
-    private ConectorBD bd;
+@WebServlet(name = "Usuario", urlPatterns = {"/Usuario"})
+public class Usuario extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,19 +32,19 @@ public class Medico extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private ConectorBD bd;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Medico</title>");
+            out.println("<title>Servlet Usuario</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Medico at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Usuario at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,17 +62,16 @@ public class Medico extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-      
         String accion = request.getParameter("accion");
         
         if (accion != null) {
             switch (accion) {
-                case "editar":
-                    this.editarMedicos(request, response);
+                case "login":
+                    this.login(request, response);
                     break;
 
                 case "eliminar":
-                    this.eliminarMedicos(request, response);
+                   // this.eliminarMedicos(request, response);
                     break;
 
                 default:
@@ -86,7 +82,6 @@ public class Medico extends HttpServlet {
         } else {
             this.cargarPagina(request, response);
         }
-
     }
 
     private void cargarPagina(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -110,36 +105,26 @@ public class Medico extends HttpServlet {
             return;
         }
     }
-
-    protected void editarMedicos(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        String id = request.getParameter("id");
-        Medicos a = new Medicos();
-        if (bd.conectar()) {
-            a = bd.buscarMedico(id);
-        }
-        
-        request.setAttribute("amod", a);
-        String jspEditar = "./editarmedicos.jsp";
-        request.getRequestDispatcher(jspEditar).forward(request, response);
-        return;
-
-    }
-
-    protected void eliminarMedicos(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String id = request.getParameter("id");
-        if (bd.conectar()) {
-            if (bd.eliminarMedico(Integer.parseInt(id))) {
-                this.cargarPagina(request, response);
+    
+    private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        bd = new ConectorBD();
+        if(bd.conectar()){
+            System.out.println("Conectado");
+            String email = request.getParameter("username");
+            String contrasena = request.getParameter("constrasena");
+            System.out.println(email + " " + contrasena);
+            if(bd.comprobarLogin(email,contrasena)){
+                System.out.println("Loggeando Correctamente");
+                request.getRequestDispatcher("./menuPrincipal.jsp").forward(request, response);
+            }else{
+                System.out.println("Loggeando Incorrectamente");
+                
+                
+                
             }
         }
-
-        this.cargarPagina(request, response);
-
     }
-
+    
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -151,73 +136,7 @@ public class Medico extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        bd = new ConectorBD();
-        String accion = request.getParameter("accion");
-        if (accion != null) {
-            switch (accion) {
-                case "insertar":
-                    this.insertarMedicos(request, response);
-                    break;
-                case "modificar":
-
-                    this.modificarMedicos(request, response);
-                    break;
-
-                case "editar":
-                    this.editarMedicos(request, response);
-                    break;
-
-                case "eliminar":
-                    this.eliminarMedicos(request, response);
-                    break;
-
-                default:
-                    this.cargarPagina(request, response);
-            }
-
-        } else {
-            this.cargarPagina(request, response);
-        }
-
-    }
-
-    protected void insertarMedicos(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String nombre = request.getParameter("nombre");
-        String sala = request.getParameter("sala");
-        float salaBD = Float.parseFloat(sala);
-        String especialidad = request.getParameter("especialidad");
-        String tarifa = request.getParameter("tarifa");
-        int tarifaBD = Integer.parseInt(tarifa);
-        if (bd.conectar()) {
-            if (bd.altaMedico(nombre, salaBD, especialidad, tarifaBD)) {
-                this.cargarPagina(request, response);
-            }
-        }
-
-    }
-
-    protected void modificarMedicos(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String id = request.getParameter("id");
-        String nombre = request.getParameter("nombre");
-        String sala = request.getParameter("sala");
-        float salaBD = Float.parseFloat(sala);
-        String especialidad = request.getParameter("especialidad");
-        String tarifa = request.getParameter("tarifa");
-        int tarifaBD = Integer.parseInt(tarifa);
-        if (bd.conectar()) {
-            if (bd.updateMedico(Integer.parseInt(id), nombre, salaBD, especialidad, tarifaBD)) {
-                System.out.println("modificado");
-            }
-
-        }
-        this.cargarPagina(request, response);
-
+        processRequest(request, response);
     }
 
     /**

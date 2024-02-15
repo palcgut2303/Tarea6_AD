@@ -94,6 +94,52 @@ public class ConectorBD {
         }
         return b;
     }
+    
+     public boolean altaUsuario(String nombre,String username, String contraseña) {
+        boolean b = false;
+        String query;
+
+        
+        query = "INSERT INTO `usuario` ( `nombre`,`username`,`contraseña`) VALUES "
+                + "( '" + nombre + "', '" + username + "', '"+contraseña+"')";
+
+        try {
+            System.out.println("Conexion: " + conn.getCatalog());
+            stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+            b = true;
+        } catch (SQLException ex) {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+        return b;
+    }
+     
+     public boolean comprobarLogin(String email,String contrasena){
+          ArrayList<usuario> lista = new ArrayList<>();
+          boolean existeUsuarioConMismaContraseña = false;
+          try {
+
+            Statement orden = conn.createStatement();
+            ResultSet query = orden.executeQuery("select * from usuario");
+           
+            while (query.next()) {
+                usuario a = new usuario(query.getInt("IDUSUARIO"),query.getString("nombre"), query.getString("usuario"), query.getString("clave"));
+
+                lista.add(a);
+                
+               
+            }
+            // Verifica si hay algún usuario con la misma contraseña
+            existeUsuarioConMismaContraseña = lista.stream()
+                .anyMatch(usuario -> usuario.getConstraseña().equals(contrasena));
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ConectorBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         return existeUsuarioConMismaContraseña;
+     }
 
     public Medicos buscarMedico(String id) {
         Medicos a = null;
