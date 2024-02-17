@@ -36,9 +36,10 @@
                     </form>
                 </section>
 
+                   
+                       <img src="images/editar.png" alt="Imagen" class="mr-4 h-60 w-50"> 
 
-
-                </section>
+                
 
             </div>
 

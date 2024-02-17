@@ -25,7 +25,7 @@ import modelo.Medicos;
 public class Medico extends HttpServlet {
 
     private ConectorBD bd;
-
+    private boolean esVacio = false;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,9 +37,9 @@ public class Medico extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -65,9 +65,9 @@ public class Medico extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-      
+
         String accion = request.getParameter("accion");
-        
+
         if (accion != null) {
             switch (accion) {
                 case "editar":
@@ -101,11 +101,13 @@ public class Medico extends HttpServlet {
             request.setAttribute("medicos", medicos);
             request.setAttribute("totalMedicos", medicos.size());
             int tarifaTotal = 0;
-            
+
             for (Medicos medico : medicos) {
                 tarifaTotal += medico.getTarifa();
             }
             request.setAttribute("tarifaTotal", tarifaTotal);
+            
+            
             request.getRequestDispatcher("./medicos.jsp").forward(request, response);
             return;
         }
@@ -113,13 +115,13 @@ public class Medico extends HttpServlet {
 
     protected void editarMedicos(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String id = request.getParameter("id");
         Medicos a = new Medicos();
         if (bd.conectar()) {
             a = bd.buscarMedico(id);
         }
-        
+
         request.setAttribute("amod", a);
         String jspEditar = "./editarmedicos.jsp";
         request.getRequestDispatcher(jspEditar).forward(request, response);
@@ -186,19 +188,28 @@ public class Medico extends HttpServlet {
 
     protected void insertarMedicos(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String nombre = request.getParameter("nombre");
         String sala = request.getParameter("sala");
-        float salaBD = Float.parseFloat(sala);
         String especialidad = request.getParameter("especialidad");
         String tarifa = request.getParameter("tarifa");
-        int tarifaBD = Integer.parseInt(tarifa);
-        if (bd.conectar()) {
-            if (bd.altaMedico(nombre, salaBD, especialidad, tarifaBD)) {
-                this.cargarPagina(request, response);
+        if (nombre.equalsIgnoreCase("") || sala.equalsIgnoreCase("") || especialidad.equalsIgnoreCase("") || tarifa.equalsIgnoreCase("")) {
+            cargarPagina(request, response);
+            
+        } else {
+            int salaBD = Integer.parseInt(sala);
+            int tarifaBD = Integer.parseInt(tarifa);
+            if (bd.conectar()) {
+                if (bd.altaMedico(nombre, salaBD, especialidad, tarifaBD)) {
+                    this.cargarPagina(request, response);
+                }
             }
         }
+        
 
     }
+    
+    
 
     protected void modificarMedicos(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

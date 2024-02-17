@@ -228,5 +228,26 @@ public class ConectorBD {
 
         return lista;
     }
+    
+    public ArrayList<usuario> listarUsuario() {
+        ArrayList<usuario> lista = new ArrayList<>();
+
+        try {
+
+            Statement orden = conn.createStatement();
+            ResultSet query = orden.executeQuery("select * from usuario");
+           
+            while (query.next()) {
+                usuario a = new usuario(query.getInt("IDUSUARIO"),query.getString("nombre"), query.getString("usuario"), query.getString("clave"));
+
+                lista.add(a);
+               
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ConectorBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return lista;
+    }
 
 }
