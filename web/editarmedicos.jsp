@@ -34,10 +34,14 @@
                         <div class="form-group"><label for="tarifa">Tarifa</label><input class="form-control" type="text" name="tarifa" value="${amod.getTarifa()}"> </div>
                         <input type="submit" value="modificar" class="btn btn-outline-primary">
                     </form>
+                        <% String mensaje = (String) request.getAttribute("mensajeError"); %>
+                <% if (mensaje != null) {%>
+                <p class="text-red-500 mt-2"><%= mensaje%></p>
+                <% }%>
                 </section>
 
-                   
-                       <img src="images/editar.png" alt="Imagen" class="mr-4 h-60 w-50"> 
+
+                <img src="images/editar.png" alt="Imagen" class="mr-4 h-60 w-50"> 
 
                 
 

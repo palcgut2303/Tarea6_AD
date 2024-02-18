@@ -99,7 +99,7 @@ public class Usuario extends HttpServlet {
             System.out.println("Conectado");
             String email = request.getParameter("email");
             String contrasena = request.getParameter("contrasena");
-            System.out.println(email + " " + contrasena);
+            
             if (bd.comprobarLogin(email, contrasena)) {
                 System.out.println("Loggeando Correctamente");
                 request.getRequestDispatcher("./menuPrincipal.jsp").forward(request, response);
