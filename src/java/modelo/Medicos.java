@@ -13,21 +13,21 @@ public class Medicos {
     
     private int idMedicos;
     private String nombre;
-    private float sala;
+    private int sala;
     private int tarifa;
     private String especialidad;
 
     public Medicos() {
     }
 
-    public Medicos(String nombre, float sala, int tarifa, String especialidad) {
+    public Medicos(String nombre, int sala, int tarifa, String especialidad) {
         this.nombre = nombre;
         this.sala = sala;
         this.tarifa = tarifa;
         this.especialidad = especialidad;
     }
 
-    public Medicos(int idMedicos, String nombre, float sala, int tarifa, String especialidad) {
+    public Medicos(int idMedicos, String nombre, int sala, int tarifa, String especialidad) {
         this.idMedicos = idMedicos;
         this.nombre = nombre;
         this.sala = sala;
@@ -53,11 +53,11 @@ public class Medicos {
         this.nombre = nombre;
     }
 
-    public float getSala() {
+    public int getSala() {
         return sala;
     }
 
-    public void setSala(float sala) {
+    public void setSala(int sala) {
         this.sala = sala;
     }
 

@@ -120,7 +120,7 @@ public class ConectorBD {
      
      public boolean comprobarLogin(String email,String contrasena){
           ArrayList<usuario> lista = new ArrayList<>();
-          boolean existeUsuarioConMismaContraseña = false;
+          //boolean comprobarContrasena = false;
           try {
 
             Statement orden = conn.createStatement();
@@ -136,15 +136,18 @@ public class ConectorBD {
             
             String contrasenaEncriptada = DigestUtils.sha256Hex(contrasena).substring(0, 40);;
            
-            
-            // Verifica si hay algún usuario con la misma contraseña
-            existeUsuarioConMismaContraseña = lista.stream()
-                .anyMatch(usuario -> usuario.getConstraseña().equals(contrasenaEncriptada));
+              for (usuario object : lista) {
+                  if(object.getUsername().equalsIgnoreCase(email) && object.getConstraseña().equalsIgnoreCase(contrasenaEncriptada)){
+                      return true;
+                  }
+              }
+           
+           
             
         } catch (SQLException ex) {
             Logger.getLogger(ConectorBD.class.getName()).log(Level.SEVERE, null, ex);
         }
-         return existeUsuarioConMismaContraseña;
+         return false;
      }
 
     public Medicos buscarMedico(String id) {
@@ -160,7 +163,7 @@ public class ConectorBD {
                 
                 a.setIdMedicos(query.getInt("id_medico"));
                 a.setNombre(query.getString("nombre"));
-                a.setSala(query.getFloat("sala"));
+                a.setSala(query.getInt("sala"));
                 a.setEspecialidad(query.getString("especialidad"));
                 a.setTarifa(query.getInt("tarifa"));
                 
@@ -217,7 +220,7 @@ public class ConectorBD {
             ResultSet query = orden.executeQuery("select * from medico");
            
             while (query.next()) {
-                Medicos a = new Medicos(query.getInt("id_medico"),query.getString("nombre"), query.getFloat("sala"), query.getInt("tarifa"), query.getString("especialidad"));
+                Medicos a = new Medicos(query.getInt("id_medico"),query.getString("nombre"), query.getInt("sala"), query.getInt("tarifa"), query.getString("especialidad"));
 
                 lista.add(a);
                

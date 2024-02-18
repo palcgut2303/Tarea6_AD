@@ -24,6 +24,10 @@
          
            
         </form>
+        <% String mensaje = (String) request.getAttribute("mensajeError"); %>
+            <% if (mensaje != null) {%>
+            <p class="text-red-500 mt-2"><%= mensaje%></p>
+            <% }%>
     </div>
 </body>
 </html>

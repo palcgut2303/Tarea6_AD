@@ -78,34 +78,16 @@ public class Usuario extends HttpServlet {
 
                 default:
                     System.out.println("Cargando pagina");
-                    this.cargarPagina(request, response);
+                    this.irPagIndex(request, response);
             }
 
         } else {
-            this.cargarPagina(request, response);
+            this.irPagIndex(request, response);
         }
     }
 
-    private void cargarPagina(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        /*System.out.println("Conectando con la bd.....");
-        bd = new ConectorBD();
-        if (bd.conectar()) {
-            System.out.println("Conectado");
-            List<Medicos> medicos = bd.listarMedico();
-            System.out.println("medico después de bd" + medicos);
-            request.setCharacterEncoding("UTF-8");
-            response.setCharacterEncoding("UTF-8");
-            request.setAttribute("medicos", medicos);
-            request.setAttribute("totalMedicos", medicos.size());
-            int tarifaTotal = 0;
-            
-            for (Medicos medico : medicos) {
-                tarifaTotal += medico.getTarifa();
-            }
-            request.setAttribute("tarifaTotal", tarifaTotal);
-            request.getRequestDispatcher("./medicos.jsp").forward(request, response);
-            return;
-        }*/
+    private void irPagIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
         request.getRequestDispatcher("./index.jsp").forward(request, response);
         return;
 
@@ -115,7 +97,7 @@ public class Usuario extends HttpServlet {
         bd = new ConectorBD();
         if (bd.conectar()) {
             System.out.println("Conectado");
-            String email = request.getParameter("username");
+            String email = request.getParameter("email");
             String contrasena = request.getParameter("contrasena");
             System.out.println(email + " " + contrasena);
             if (bd.comprobarLogin(email, contrasena)) {
@@ -161,11 +143,11 @@ public class Usuario extends HttpServlet {
 
                 default:
                     System.out.println("Cargando pagina");
-                    this.cargarPagina(request, response);
+                    this.irPagIndex(request, response);
             }
 
         } else {
-            this.cargarPagina(request, response);
+            this.irPagIndex(request, response);
         }
     }
 
@@ -185,11 +167,16 @@ public class Usuario extends HttpServlet {
             usuario usuario = new usuario();
             usuario.setUsername(email);
             List<usuario> usuarios = bd.listarUsuario();
-
-            estaBD = usuarios.stream()
-                    .anyMatch(us -> us.getUsername().equals(email));
+            
+            for (usuario usuario1 : usuarios) {
+                if(usuario1.getUsername().equalsIgnoreCase(email)){
+                    estaBD = true;
+                }
+            }
+            
+            
             if (estaBD) {
-                request.setAttribute("mensaje", "Email ya ingresado en la base de datos.");
+                request.setAttribute("mensajeError", "Email ya ingresado en la base de datos.");
                 request.getRequestDispatcher("./register.jsp").forward(request, response);
                 return;
             } else {
